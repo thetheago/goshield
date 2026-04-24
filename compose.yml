@@ -29,6 +29,21 @@ services:
       - "traefik.http.routers.api.rule=Host(`traefik.localhost`)"
       - "traefik.http.routers.api.service=api@internal"
 
+  goshield:
+    build:
+      context: .
+      dockerfile: ./docker/goshield/Dockerfile
+    container_name: goshield
+    environment:
+      - MASTER_KEY=youshallnotpass
+    networks:
+      - traefik
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.goshield.rule: "Host(`goshield.localhost`)"
+      traefik.http.routers.goshield.entrypoints: "web"
+      traefik.http.services.goshield.loadbalancer.server.port: "8080"
+
 networks:
   traefik:
     external: true
